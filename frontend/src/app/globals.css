@@ -2,4 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-body { background: #f8fafc; color: #1e293b; }
+:root {
+  --green-950: #0a1f0e;
+  --green-900: #112a14;
+  --green-800: #1a3d1f;
+  --green-700: #245229;
+  --green-600: #2d6a33;
+  --green-500: #3a8a42;
+  --green-400: #4db357;
+  --green-300: #6ed17a;
+  --green-200: #9de4a6;
+  --green-100: #c8f2cd;
+  --green-50:  #edfaee;
+  --teal-500: #1d9e75;
+  --teal-300: #5dcaa5;
+  --slate-900: #0f172a;
+  --slate-800: #1e293b;
+  --slate-700: #334155;
+  --slate-400: #94a3b8;
+  --slate-200: #e2e8f0;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--green-950) !important;
+  color: var(--slate-200);
+  font-family: system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+#__next, main { background: var(--green-950); }
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(61,138,66,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61,138,66,0.08) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--green-400);
+  border-radius: 50%;
+  animation: pulse-anim 2s infinite;
+  display: inline-block;
+}
+
+@keyframes pulse-anim {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
