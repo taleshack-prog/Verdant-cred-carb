@@ -23,6 +23,8 @@ export default function RegisterPage() {
       if (!res.ok) throw new Error(data.message || 'Erro ao criar conta');
       localStorage.setItem('verdant_token', data.accessToken);
       localStorage.setItem('verdant_user', JSON.stringify(data.user));
+      document.cookie = `verdant_token=${data.accessToken};path=/;max-age=604800`;
+      document.cookie = `verdant_role=${data.user.role};path=/;max-age=604800`;
       router.push('/producer');
     } catch (err: any) {
       setError(err.message);

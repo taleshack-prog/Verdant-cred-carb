@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 
 interface TopBarProps {
   userName?: string;
@@ -13,6 +14,7 @@ export function TopBar({ userName = 'Usuario', role = 'PRODUCER' }: TopBarProps)
     ? [{ href: '/admin', label: 'Dispositivos' }, { href: '/admin/projects', label: 'Projetos' }]
     : [{ href: '/producer', label: 'Dashboard' }, { href: '/producer/tokens', label: 'Tokens' }];
   const initials = userName.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase();
+  const { logout } = useAuth();
 
   return (
     <nav style={{ background: 'var(--green-900)', borderBottom: '0.5px solid rgba(77,179,87,0.15)', padding: '12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -29,9 +31,14 @@ export function TopBar({ userName = 'Usuario', role = 'PRODUCER' }: TopBarProps)
           ))}
         </div>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(77,179,87,0.1)', border: '0.5px solid rgba(77,179,87,0.2)', borderRadius: '100px', padding: '4px 12px 4px 4px' }}>
-        <div style={{ width: '20px', height: '20px', background: role === 'ADMIN' ? 'var(--teal-500)' : 'var(--green-600)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: 'var(--green-100)', fontWeight: 500 }}>{initials}</div>
-        <span style={{ fontSize: '12px', color: 'var(--green-300)' }}>{userName}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(77,179,87,0.1)', border: '0.5px solid rgba(77,179,87,0.2)', borderRadius: '100px', padding: '4px 12px 4px 4px' }}>
+          <div style={{ width: '20px', height: '20px', background: role === 'ADMIN' ? 'var(--teal-500)' : 'var(--green-600)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: 'var(--green-100)', fontWeight: 500 }}>{initials}</div>
+          <span style={{ fontSize: '12px', color: 'var(--green-300)' }}>{userName}</span>
+        </div>
+        <button onClick={logout} style={{ fontSize: '11px', color: 'var(--slate-400)', background: 'transparent', border: '0.5px solid rgba(77,179,87,0.15)', borderRadius: '6px', padding: '4px 10px', cursor: 'pointer' }}>
+          Sair
+        </button>
       </div>
     </nav>
   );

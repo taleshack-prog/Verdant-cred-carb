@@ -23,7 +23,11 @@ export default function LoginPage() {
       if (!res.ok) throw new Error(data.message || 'Erro ao entrar');
       localStorage.setItem('verdant_token', data.accessToken);
       localStorage.setItem('verdant_user', JSON.stringify(data.user));
-      router.push('/producer');
+      document.cookie = `verdant_token=${data.accessToken};path=/;max-age=604800`;
+      document.cookie = `verdant_role=${data.user.role};path=/;max-age=604800`;
+      const params = new URLSearchParams(window.location.search);
+      const redirect = params.get('redirect') || (data.user.role === 'ADMIN' ? '/admin' : '/producer');
+      router.push(redirect);
     } catch (err: any) {
       setError(err.message);
     } finally { setLoading(false); }
