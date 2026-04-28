@@ -51,9 +51,11 @@ export class UniversalAdapterService {
     const [ivHex, encHex] = value.split(':');
     const iv = Buffer.from(ivHex!, 'hex');
     const decipher = crypto.createDecipheriv('aes-256-cbc', this.key, iv);
-    let dec = decipher.update(Buffer.from(encHex!, 'hex'), 'hex', 'utf8');
-    dec += decipher.final('utf8');
-    return dec;
+    const decBuffer = Buffer.concat([
+      decipher.update(Buffer.from(encHex!, 'hex')),
+      decipher.final(),
+    ]);
+    return decBuffer.toString('utf8');
   }
 
   connect(deviceId: string, deviceType: DeviceType = 'GENERIC', credentials: Record<string, unknown>) {
