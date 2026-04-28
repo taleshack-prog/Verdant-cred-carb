@@ -1,0 +1,16 @@
+node_modules/
+.next/
+dist/
+build/
+.env
+*.env.local
+__pycache__/
+*.pyc
+.venv/
+venv/
+artifacts/
+cache/
+typechain-types/
+coverage/
+.turbo/
+normalizer.log

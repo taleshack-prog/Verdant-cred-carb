@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  db:
+    image: timescale/timescaledb:latest-pg15
+    environment:
+      POSTGRES_USER: verdant
+      POSTGRES_PASSWORD: verdant_secret
+      POSTGRES_DB: verdant_db
+    ports: ['5432:5432']
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U verdant']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports: ['6379:6379']
+    volumes: [redis_data:/data]
+    command: redis-server --appendonly yes
+
+  backend:
+    build: { context: ./backend, dockerfile: Dockerfile }
+    ports: ['3001:3001']
+    env_file: ['./backend/.env']
+    environment:
+      DB_HOST: db
+      REDIS_HOST: redis
+      PYTHON_ADAPTER_URL: http://adapter:8000
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_started }
+    volumes: ['./backend:/app', '/app/node_modules']
+
+  adapter:
+    build: { context: ./adapter, dockerfile: Dockerfile }
+    ports: ['8000:8000']
+    env_file: ['./adapter/.env']
+    volumes: ['./adapter:/app']
+
+  frontend:
+    build: { context: ./frontend, dockerfile: Dockerfile }
+    ports: ['3000:3000']
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
+    depends_on: [backend]
+    volumes: ['./frontend:/app', '/app/node_modules', '/app/.next']
+
+volumes:
+  postgres_data:
+  redis_data:
